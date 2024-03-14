@@ -156,8 +156,6 @@ end
 private
     int dsx, dsy;
 begin
-    window_set_title( "EEEEK! EEEEEK! HOOOOOOK!!!" );
-
     conf.fase[ 0 ] = 1;
     conf.vidafase[ 0 ] = 3;
     if ( fexists( get_pref_path("bennugd.org","eeeek") + "profile.dat" ))
@@ -180,6 +178,8 @@ begin
     set_fps( DEFAULT_FPS, 0 );
 
     set_video_mode( resx, resy );
+
+    window_set_title( "EEEEK! EEEEEK! HOOOOOOK!!!" );
 
     init_bgd1_background_emulation();
 
