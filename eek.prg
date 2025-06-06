@@ -5630,7 +5630,7 @@ begin
             tutofpg = fpg_load( "./data/tutos.fpg" );
             jaulawav = sound_load( "./data/metal.wav" );
             jaulacwav = sound_load( "./data/crash.wav" );
-            canc = music_load( "./data/jungle-fun.mp3" );
+            canc = music_load( "./data/jungle-fun.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 4 );
             scroll[ 1 ].z = 1000;
             scroll[ 1 ].follow = 0;
@@ -5678,7 +5678,7 @@ begin
             levelm = fpg_load( "./data/level1.fpg" );
             rayofpg = fpg_load( "./data/rayo.fpg" );
             platfpg = fpg_load( "./data/plat.fpg" );
-            canc = music_load( "./data/jungle-fun.mp3" );
+            canc = music_load( "./data/jungle-fun.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 4 );
             /*scroll_start(1, levelm, 4, 0, 0, 4);
 		scroll[1].z=1000;
@@ -5741,7 +5741,7 @@ begin
             rayofpg = fpg_load( "./data/rayo.fpg" );
             shotwav = sound_load( "./data/shot.wav" );
             bomw = sound_load( "./data/boom.wav" );
-            canc = music_load( "./data/claustrophobia.mp3" );
+            canc = music_load( "./data/claustrophobia.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 4 );
             /*scroll_start(1, levelm, 4, 0, 0, 4);
 		scroll[1].z=1000;
@@ -5807,7 +5807,7 @@ begin
             rayofpg = fpg_load( "./data/rayo2.fpg" );
             shotwav = sound_load( "./data/shot.wav" );
             bomw = sound_load( "./data/boom.wav" );
-            canc = music_load( "./data/claustrophobia.mp3" );
+            canc = music_load( "./data/claustrophobia.ogg" );
             scroll_start( 0, levelm, 3, 1, 0, 8 );
             /*scroll_start(1, levelm, 4, 0, 0, 4);
 		scroll[1].z=1000;
@@ -5877,7 +5877,7 @@ begin
             rayofpg = fpg_load( "./data/rayo2.fpg" );
             shotwav = sound_load( "./data/shot.wav" );
             bomw = sound_load( "./data/boom.wav" );
-            canc = music_load( "./data/jungle-fun.mp3" );
+            canc = music_load( "./data/jungle-fun.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 0 );
             scroll.flags2 = B_NOCOLORKEY;
             scroll_start( 1, levelm, 4, 0, 0, 3 );
@@ -5972,7 +5972,7 @@ begin
             //		rayofpg=fpg_load("./data/rayo2.fpg");
             shotwav = sound_load( "./data/shot.wav" );
             bomw = sound_load( "./data/boom.wav" );
-            canc = music_load( "./data/claustrophobia.mp3" );
+            canc = music_load( "./data/claustrophobia.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 0 );
             scroll.flags2 = B_NOCOLORKEY;
             scroll_start( 1, levelm, 4, 0, 0, 3 );
@@ -6044,7 +6044,7 @@ begin
             level = fpg_load( "./data/level68b.fpg" );
             levelm = fpg_load( "./data/level6.fpg" );
             platfpg = fpg_load( "./data/plat.fpg" );
-            canc = music_load( "./data/jungle-fun.mp3" );
+            canc = music_load( "./data/jungle-fun.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 0 );
             scroll.flags2 = B_NOCOLORKEY;
             scroll_start( 1, levelm, 4, 0, 0, 3 );
@@ -6106,7 +6106,7 @@ begin
             ris = sound_load( "./data/ris.wav" );
             alar = sound_load( "./data/alar.wav" );
             no = sound_load( "./data/no.wav" );
-            canc = music_load( "./data/boss.mp3" );
+            canc = music_load( "./data/boss.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 0 );
             go(); //control();
             chan = map_get_pixel( level, 997, 0, 0 );
