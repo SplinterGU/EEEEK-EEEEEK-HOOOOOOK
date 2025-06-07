@@ -137,19 +137,26 @@ global
 
 function set_video_mode(int w, h)
 begin
-    if ( conf.fullsc )
-        desktop_get_size( &sx, &sy );
-        screen.scale_resolution = sx*10000+sy;
+    if ( os_id == OS_ANDROID )
+        screen.fullscreen = 1;
+        screen.scale_resolution = -1;
+        screen.scale_resolution_aspectratio = sra_preserve;
+        set_mode( w, h, ( conf.modal ? MODE_GRAB_INPUT : 0 ) | ( conf.vsync ? MODE_WAITVSYNC : 0 ) );
     else
-        screen.scale_resolution = conf.reesc;
+        if ( conf.fullsc )
+            desktop_get_size( &sx, &sy );
+            screen.scale_resolution = sx*10000+sy;
+        else
+            screen.scale_resolution = conf.reesc;
+        end
+        screen.fullscreen = conf.fullsc;
+        screen.scale_resolution_aspectratio = sra_preserve;
+        set_mode( w, h, ( conf.modal ? MODE_GRAB_INPUT : 0 ) | ( conf.vsync ? MODE_WAITVSYNC : 0 ) );
+        desktop_get_size( &sx, &sy );
+        int ww, wh;
+        window_get_size(&ww, &wh, NULL, NULL, NULL, NULL );
+        window_set_pos( sx / 2 - ww / 2, sy / 2 - wh / 2 );
     end
-    screen.fullscreen = conf.fullsc;
-    screen.scale_resolution_aspectratio = sra_preserve;
-    set_mode( resx, resy, ( conf.modal ? MODE_GRAB_INPUT : 0 ) | ( conf.vsync ? MODE_WAITVSYNC : 0 ) );
-    desktop_get_size( &sx, &sy );
-    int ww, wh;
-    window_get_size(&ww, &wh, NULL, NULL, NULL, NULL );
-    window_set_pos( sx / 2 - ww / 2, sy / 2 - wh / 2 );
 end
 
 
@@ -183,31 +190,33 @@ begin
 
     init_bgd1_background_emulation();
 
-    gfpg = fpg_load( "./data/general.fpg" );
-    window_set_icon( gfpg, 24 );
-//    monofpg = fpg_load( "./data/hr.fpg" );
-    p0 = fpg_load( "./data/hr-norm.fpg" );
-    p1 = fpg_load( "./data/hr-ng.fpg" );
-    p2 = fpg_load( "./data/hr-nj.fpg" );
-    p3 = fpg_load( "./data/hr-b.fpg" );
-    p4 = fpg_load( "./data/hr-am.fpg" );
-    p5 = fpg_load( "./data/hr-rs.fpg" );
-    p6 = fpg_load( "./data/hr-rj.fpg" );
-    p7 = fpg_load( "./data/hr-qm.fpg" );
-    p8 = fpg_load( "./data/hr-z.fpg" );
-    p9 = fpg_load( "./data/hr-pl.fpg" );
-    aak = sound_load( "./data/aak3.wav" );
-    aak2 = sound_load( "./data/aak2.wav" );
-    cabreowav = sound_load( "./data/cabreo.wav" );
-    cabreowav2 = sound_load( "./data/cabreo2.wav" );
-    cabreowav3 = sound_load( "./data/cabreo3.wav" );
-    techowav = sound_load( "./data/techo.wav" );
-    saltowav = sound_load( "./data/salto1.wav" );
-    saltowav1 = sound_load( "./data/salto2.wav" );
-    pausaw1 = sound_load( "./data/pausa1.wav" );
-    pausaw2 = sound_load( "./data/pausa2.wav" );
-    boing = sound_load( "./data/boing.wav" );
-    ooh = sound_load( "./data/ooh.wav" );
+    gfpg = fpg_load( "data/general.fpg" );
+    if ( os_id != OS_ANDROID )
+        window_set_icon( gfpg, 24 );
+    end
+//    monofpg = fpg_load( "data/hr.fpg" );
+    p0 = fpg_load( "data/hr-norm.fpg" );
+    p1 = fpg_load( "data/hr-ng.fpg" );
+    p2 = fpg_load( "data/hr-nj.fpg" );
+    p3 = fpg_load( "data/hr-b.fpg" );
+    p4 = fpg_load( "data/hr-am.fpg" );
+    p5 = fpg_load( "data/hr-rs.fpg" );
+    p6 = fpg_load( "data/hr-rj.fpg" );
+    p7 = fpg_load( "data/hr-qm.fpg" );
+    p8 = fpg_load( "data/hr-z.fpg" );
+    p9 = fpg_load( "data/hr-pl.fpg" );
+    aak = sound_load( "data/aak3.wav" );
+    aak2 = sound_load( "data/aak2.wav" );
+    cabreowav = sound_load( "data/cabreo.wav" );
+    cabreowav2 = sound_load( "data/cabreo2.wav" );
+    cabreowav3 = sound_load( "data/cabreo3.wav" );
+    techowav = sound_load( "data/techo.wav" );
+    saltowav = sound_load( "data/salto1.wav" );
+    saltowav1 = sound_load( "data/salto2.wav" );
+    pausaw1 = sound_load( "data/pausa1.wav" );
+    pausaw2 = sound_load( "data/pausa2.wav" );
+    boing = sound_load( "data/boing.wav" );
+    ooh = sound_load( "data/ooh.wav" );
 
     logos();
     repeat
@@ -220,7 +229,7 @@ end
 
 process logos()
 begin
-    file = fpg_load( "./data/logos.fpg" );
+    file = fpg_load( "data/logos.fpg" );
     fade_off( 500 );
     paralo( 5000 );
     put_screen( file, 1 );
@@ -1033,13 +1042,13 @@ process final()
 begin
     conf.gameclear = 1;
     mouse.graph = 0;
-    file = fpg_load( "./data/finale.fpg" );
-    pll = sound_load( "./data/pll.wav" );
-    cabe = sound_load( "./data/cabe.wav" );
-    corkw = sound_load( "./data/cork.wav" );
-    drollw = sound_load( "./data/droll.wav" );
-    finm = sound_load( "./data/finm.wav" );
-    //cabreohw=sound_load("./data/cabreoh.wav");
+    file = fpg_load( "data/finale.fpg" );
+    pll = sound_load( "data/pll.wav" );
+    cabe = sound_load( "data/cabe.wav" );
+    corkw = sound_load( "data/cork.wav" );
+    drollw = sound_load( "data/droll.wav" );
+    finm = sound_load( "data/finm.wav" );
+    //cabreohw=sound_load("data/cabreoh.wav");
     sound_play( finm, -1 );
     put_screen( file, 12 );
     graph = 13;
@@ -5596,13 +5605,13 @@ begin
     mody = -65;
     switch ( est )
         case 0:
-            aak3 = sound_load( "./data/aak.wav" );
+            aak3 = sound_load( "data/aak.wav" );
             prota = id;
-            intro_fpg = fpg_load( "./data/intro.fpg" );
-            canc = sound_load( "./data/intro.wav" );
-            cabe = sound_load( "./data/cabe.wav" );
-            cla = sound_load( "./data/cla.wav" );
-            prrz = sound_load( "./data/prrz.wav" );
+            intro_fpg = fpg_load( "data/intro.fpg" );
+            canc = sound_load( "data/intro.wav" );
+            cabe = sound_load( "data/cabe.wav" );
+            cla = sound_load( "data/cla.wav" );
+            prrz = sound_load( "data/prrz.wav" );
             voz = sound_play( canc, -1 );
             intro();
             if ( conf.fase[ 0 ]
@@ -5625,12 +5634,12 @@ begin
             sound_unload( canc );
             sound_unload( cabe );
             sound_unload( cla );
-            level = fpg_load( "./data/level08b.fpg" );
-            levelm = fpg_load( "./data/level0.fpg" );
-            tutofpg = fpg_load( "./data/tutos.fpg" );
-            jaulawav = sound_load( "./data/metal.wav" );
-            jaulacwav = sound_load( "./data/crash.wav" );
-            canc = music_load( "./data/jungle-fun.ogg" );
+            level = fpg_load( "data/level08b.fpg" );
+            levelm = fpg_load( "data/level0.fpg" );
+            tutofpg = fpg_load( "data/tutos.fpg" );
+            jaulawav = sound_load( "data/metal.wav" );
+            jaulacwav = sound_load( "data/crash.wav" );
+            canc = music_load( "data/jungle-fun.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 4 );
             scroll[ 1 ].z = 1000;
             scroll[ 1 ].follow = 0;
@@ -5642,7 +5651,7 @@ begin
             salida = map_get_pixel( level, 997, 4, 0 );
             prota = caged( 432, 204 );
             //prota=monete(432,204);
-            /*		enem=fpg_load("./data/enem.fpg");
+            /*		enem=fpg_load("data/enem.fpg");
 		elec(208,168,173);
 		elec(143,243,100);*/
             estr( 645, 217, 10, 1 );
@@ -5674,11 +5683,11 @@ begin
             fade_on( 500 );
         end
         case 2:
-            level = fpg_load( "./data/level18b.fpg" );
-            levelm = fpg_load( "./data/level1.fpg" );
-            rayofpg = fpg_load( "./data/rayo.fpg" );
-            platfpg = fpg_load( "./data/plat.fpg" );
-            canc = music_load( "./data/jungle-fun.ogg" );
+            level = fpg_load( "data/level18b.fpg" );
+            levelm = fpg_load( "data/level1.fpg" );
+            rayofpg = fpg_load( "data/rayo.fpg" );
+            platfpg = fpg_load( "data/plat.fpg" );
+            canc = music_load( "data/jungle-fun.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 4 );
             /*scroll_start(1, levelm, 4, 0, 0, 4);
 		scroll[1].z=1000;
@@ -5733,15 +5742,15 @@ begin
             fade_on( 500 );
         end
         case 5:
-            level = fpg_load( "./data/level28b.fpg" );
-            levelm = fpg_load( "./data/level2.fpg" );
-            platfpg = fpg_load( "./data/plat.fpg" );
-            misfpg = fpg_load( "./data/misil.fpg" );
-            explofpg = fpg_load( "./data/explo.fpg" );
-            rayofpg = fpg_load( "./data/rayo.fpg" );
-            shotwav = sound_load( "./data/shot.wav" );
-            bomw = sound_load( "./data/boom.wav" );
-            canc = music_load( "./data/claustrophobia.ogg" );
+            level = fpg_load( "data/level28b.fpg" );
+            levelm = fpg_load( "data/level2.fpg" );
+            platfpg = fpg_load( "data/plat.fpg" );
+            misfpg = fpg_load( "data/misil.fpg" );
+            explofpg = fpg_load( "data/explo.fpg" );
+            rayofpg = fpg_load( "data/rayo.fpg" );
+            shotwav = sound_load( "data/shot.wav" );
+            bomw = sound_load( "data/boom.wav" );
+            canc = music_load( "data/claustrophobia.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 4 );
             /*scroll_start(1, levelm, 4, 0, 0, 4);
 		scroll[1].z=1000;
@@ -5799,15 +5808,15 @@ begin
             fade_on( 500 );
         end
         case 6:
-            level = fpg_load( "./data/level38b.fpg" );
-            levelm = fpg_load( "./data/level3.fpg" );
-            //platfpg=fpg_load("./data/plat.fpg");
-            misfpg = fpg_load( "./data/misil.fpg" );
-            explofpg = fpg_load( "./data/explo.fpg" );
-            rayofpg = fpg_load( "./data/rayo2.fpg" );
-            shotwav = sound_load( "./data/shot.wav" );
-            bomw = sound_load( "./data/boom.wav" );
-            canc = music_load( "./data/claustrophobia.ogg" );
+            level = fpg_load( "data/level38b.fpg" );
+            levelm = fpg_load( "data/level3.fpg" );
+            //platfpg=fpg_load("data/plat.fpg");
+            misfpg = fpg_load( "data/misil.fpg" );
+            explofpg = fpg_load( "data/explo.fpg" );
+            rayofpg = fpg_load( "data/rayo2.fpg" );
+            shotwav = sound_load( "data/shot.wav" );
+            bomw = sound_load( "data/boom.wav" );
+            canc = music_load( "data/claustrophobia.ogg" );
             scroll_start( 0, levelm, 3, 1, 0, 8 );
             /*scroll_start(1, levelm, 4, 0, 0, 4);
 		scroll[1].z=1000;
@@ -5869,15 +5878,15 @@ begin
             fade_on( 500 );
         end
         case 3:
-            level = fpg_load( "./data/level48b.fpg" );
-            levelm = fpg_load( "./data/level4.fpg" );
-            //platfpg=fpg_load("./data/plat.fpg");
-            misfpg = fpg_load( "./data/misil.fpg" );
-            explofpg = fpg_load( "./data/explo.fpg" );
-            rayofpg = fpg_load( "./data/rayo2.fpg" );
-            shotwav = sound_load( "./data/shot.wav" );
-            bomw = sound_load( "./data/boom.wav" );
-            canc = music_load( "./data/jungle-fun.ogg" );
+            level = fpg_load( "data/level48b.fpg" );
+            levelm = fpg_load( "data/level4.fpg" );
+            //platfpg=fpg_load("data/plat.fpg");
+            misfpg = fpg_load( "data/misil.fpg" );
+            explofpg = fpg_load( "data/explo.fpg" );
+            rayofpg = fpg_load( "data/rayo2.fpg" );
+            shotwav = sound_load( "data/shot.wav" );
+            bomw = sound_load( "data/boom.wav" );
+            canc = music_load( "data/jungle-fun.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 0 );
             scroll.flags2 = B_NOCOLORKEY;
             scroll_start( 1, levelm, 4, 0, 0, 3 );
@@ -5964,15 +5973,15 @@ begin
         end
         case 4:
             modx = 110;
-            level = fpg_load( "./data/level58b.fpg" );
-            levelm = fpg_load( "./data/level5.fpg" );
-            platfpg = fpg_load( "./data/plat.fpg" );
-            misfpg = fpg_load( "./data/misil.fpg" );
-            explofpg = fpg_load( "./data/explo.fpg" );
-            //		rayofpg=fpg_load("./data/rayo2.fpg");
-            shotwav = sound_load( "./data/shot.wav" );
-            bomw = sound_load( "./data/boom.wav" );
-            canc = music_load( "./data/claustrophobia.ogg" );
+            level = fpg_load( "data/level58b.fpg" );
+            levelm = fpg_load( "data/level5.fpg" );
+            platfpg = fpg_load( "data/plat.fpg" );
+            misfpg = fpg_load( "data/misil.fpg" );
+            explofpg = fpg_load( "data/explo.fpg" );
+            //		rayofpg=fpg_load("data/rayo2.fpg");
+            shotwav = sound_load( "data/shot.wav" );
+            bomw = sound_load( "data/boom.wav" );
+            canc = music_load( "data/claustrophobia.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 0 );
             scroll.flags2 = B_NOCOLORKEY;
             scroll_start( 1, levelm, 4, 0, 0, 3 );
@@ -6041,10 +6050,10 @@ begin
             fade_on( 500 );
         end
         case 1:
-            level = fpg_load( "./data/level68b.fpg" );
-            levelm = fpg_load( "./data/level6.fpg" );
-            platfpg = fpg_load( "./data/plat.fpg" );
-            canc = music_load( "./data/jungle-fun.ogg" );
+            level = fpg_load( "data/level68b.fpg" );
+            levelm = fpg_load( "data/level6.fpg" );
+            platfpg = fpg_load( "data/plat.fpg" );
+            canc = music_load( "data/jungle-fun.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 0 );
             scroll.flags2 = B_NOCOLORKEY;
             scroll_start( 1, levelm, 4, 0, 0, 3 );
@@ -6096,17 +6105,17 @@ begin
             fade_on( 500 );
         end
         case 7:
-            level = fpg_load( "./data/level98b.fpg" );
-            levelm = fpg_load( "./data/level9.fpg" );
-            misfpg = fpg_load( "./data/misil.fpg" );
-            explofpg = fpg_load( "./data/explo.fpg" );
-            //		rayofpg=fpg_load("./data/rayo2.fpg");
-            shotwav = sound_load( "./data/shot.wav" );
-            bomw = sound_load( "./data/boom.wav" );
-            ris = sound_load( "./data/ris.wav" );
-            alar = sound_load( "./data/alar.wav" );
-            no = sound_load( "./data/no.wav" );
-            canc = music_load( "./data/boss.ogg" );
+            level = fpg_load( "data/level98b.fpg" );
+            levelm = fpg_load( "data/level9.fpg" );
+            misfpg = fpg_load( "data/misil.fpg" );
+            explofpg = fpg_load( "data/explo.fpg" );
+            //		rayofpg=fpg_load("data/rayo2.fpg");
+            shotwav = sound_load( "data/shot.wav" );
+            bomw = sound_load( "data/boom.wav" );
+            ris = sound_load( "data/ris.wav" );
+            alar = sound_load( "data/alar.wav" );
+            no = sound_load( "data/no.wav" );
+            canc = music_load( "data/boss.ogg" );
             scroll_start( 0, levelm, 3, 0, 0, 0 );
             go(); //control();
             chan = map_get_pixel( level, 997, 0, 0 );
@@ -6213,7 +6222,7 @@ begin
     sound_stop( -1 );
     scroll.x0 = 0;
     scroll.y0 = 0;
-    file = fpg_load( "./data/menu.fpg" );
+    file = fpg_load( "data/menu.fpg" );
     chan = map_get_pixel( file, 997, 0, 0 );
     pare = map_get_pixel( file, 997, 1, 0 );
     techo = map_get_pixel( file, 997, 2, 0 );
@@ -6227,7 +6236,7 @@ begin
     y = 138;
     graph = 4;
     //flags=B_NOCOLORKEY;
-    m = sound_load( "./data/menu.wav" );
+    m = sound_load( "data/menu.wav" );
     wa = sound_play( m, -1 );
     set_panning( 0, 255, 255 );
     if ( os_id != OS_GP2X_WIZ )
